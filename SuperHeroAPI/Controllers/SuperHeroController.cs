@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SuperHeroAPI.Models;
-using System.Runtime.ExceptionServices;
+using SuperHeroAPI.Services.SuperHeroService;
 
 namespace SuperHeroAPI.Controllers
 {
@@ -9,34 +8,10 @@ namespace SuperHeroAPI.Controllers
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
-        private static List<SuperHero> superHeroes = new List<SuperHero>
-            {
-                new SuperHero
-                {
-                    Id = 1,
-                    Name = "Spider Man",
-                    FirstName = "Peter",
-                    LastName = "Parker",
-                    Place = "New York City"
-                },
-                new SuperHero
-                {
-                    Id = 2,
-                    Name = "Iron Man",
-                    FirstName = "Tony",
-                    LastName = "Stark",
-                    Place = ";alibu"
-                },
-                new SuperHero
-                {
-                    Id = 3,
-                    Name = "Batman",
-                    FirstName = "Bruce",
-                    LastName = "Wayne",
-                    Place = "Gotham City"
-                },
-
-            };
+        public SuperHeroController(ISuperHeroService _superHeroService)
+        {
+            _superHeroService = superHeroService;
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<SuperHero>>> GetAllHeroes()
@@ -80,14 +55,11 @@ namespace SuperHeroAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<SuperHero>>> DeleteeHero(int id)
+        public async Task<ActionResult<List<SuperHero>>> DeleteHero(int id)
         {
-            var hero = superHeroes.Find(x => x.Id == id);
-            if (hero == null)
-            {
-                return NotFound("This hero doesn't exist");
-            }
-            superHeroes.Remove(hero);
+            var result = _superHeroService.DeleteHero(id);
+            if (result == null)
+                return NotFound("Hero not found");
             return Ok(superHeroes);
         }
     }
