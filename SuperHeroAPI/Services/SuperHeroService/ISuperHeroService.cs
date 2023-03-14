@@ -2,10 +2,10 @@
 {
     public interface ISuperHeroService
     {
-        List<SuperHero> GetSuperHeroes();
-        SuperHero GetSingleHero(int id);
-        SuperHero AddHero(SuperHero hero);
-        SuperHero UpdateHero(int id, SuperHero request);
-        SuperHero DeleteeHero(int id);
+        List<SuperHero> GetAllHeroes();
+        SuperHero? GetSingleHero(int id);
+        List<SuperHero> AddHero(SuperHero hero);
+        List<SuperHero>? UpdateHero(int id, SuperHero request);
+        List<SuperHero>? DeleteHero(int id);
     }
 }

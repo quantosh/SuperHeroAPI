@@ -8,7 +8,9 @@ namespace SuperHeroAPI.Controllers
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
-        public SuperHeroController(ISuperHeroService _superHeroService)
+        private readonly ISuperHeroService _superHeroService;
+
+        public SuperHeroController(ISuperHeroService superHeroService)
         {
             _superHeroService = superHeroService;
         }
@@ -16,42 +18,32 @@ namespace SuperHeroAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<SuperHero>>> GetAllHeroes()
         {
-            return Ok(superHeroes);
+            return _superHeroService.GetAllHeroes();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<SuperHero>> GetSingleHero(int id)
         {
-            var hero = superHeroes.Find(x => x.Id == id);
-            if (hero == null)
-            {
-                return NotFound("This hero doesnt exists");
-            }
-            return Ok(hero);
+            var result = _superHeroService.GetSingleHero(id);
+            if (result == null)
+                return NotFound("Hero not found");
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
         {
-            superHeroes.Add(hero);
-            return Ok(superHeroes);
+            var result = _superHeroService.AddHero(hero);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<List<SuperHero>>> UpdateHero(int id, SuperHero request)
         {
-            var hero = superHeroes.Find(x => x.Id == id);
-            if (hero == null)
-            {
-                return NotFound("This hero doesn't exist");
-            }
-
-            hero.Name = request.Name;
-            hero.FirstName = request.FirstName;
-            hero.LastName = request.LastName;
-            hero.Place = request.Place;
-
-            return Ok(superHeroes);
+            var result = _superHeroService.UpdateHero(id, request);
+            if (result == null)
+                return NotFound("Hero not found");
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
@@ -60,7 +52,7 @@ namespace SuperHeroAPI.Controllers
             var result = _superHeroService.DeleteHero(id);
             if (result == null)
                 return NotFound("Hero not found");
-            return Ok(superHeroes);
+            return Ok(result);
         }
     }
 }
