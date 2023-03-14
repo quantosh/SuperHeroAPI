@@ -71,11 +71,23 @@ namespace SuperHeroAPI.Controllers
                 return NotFound("This hero doesn't exist");
             }
 
+            hero.Name = request.Name;
             hero.FirstName = request.FirstName;
             hero.LastName = request.LastName;
             hero.Place = request.Place;
-            hero.Name = request.Name;
 
+            return Ok(superHeroes);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<SuperHero>>> DeleteeHero(int id)
+        {
+            var hero = superHeroes.Find(x => x.Id == id);
+            if (hero == null)
+            {
+                return NotFound("This hero doesn't exist");
+            }
+            superHeroes.Remove(hero);
             return Ok(superHeroes);
         }
     }
