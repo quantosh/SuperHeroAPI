@@ -30,10 +30,10 @@ namespace SuperHeroAPI.Controllers
                 new SuperHero
                 {
                     Id = 3,
-                    Name = "Spider Man",
-                    FirstName = "Peter",
-                    LastName = "Parker",
-                    Place = "New York City"
+                    Name = "Batman",
+                    FirstName = "Bruce",
+                    LastName = "Wayne",
+                    Place = "Gotham City"
                 },
 
             };
@@ -45,10 +45,38 @@ namespace SuperHeroAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<SuperHero>>> GetSingleHero(int id)
+        public async Task<ActionResult<SuperHero>> GetSingleHero(int id)
         {
             var hero = superHeroes.Find(x => x.Id == id);
+            if (hero == null)
+            {
+                return NotFound("This hero doesnt exists");
+            }
             return Ok(hero);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
+        {
+            superHeroes.Add(hero);
+            return Ok(superHeroes);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<SuperHero>>> UpdateHero(int id, SuperHero request)
+        {
+            var hero = superHeroes.Find(x => x.Id == id);
+            if (hero == null)
+            {
+                return NotFound("This hero doesn't exist");
+            }
+
+            hero.FirstName = request.FirstName;
+            hero.LastName = request.LastName;
+            hero.Place = request.Place;
+            hero.Name = request.Name;
+
+            return Ok(superHeroes);
         }
     }
 }
